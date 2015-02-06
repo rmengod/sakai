@@ -501,7 +501,7 @@ public class BasicEmailService implements EmailService
 		}
 
 		// use the special extension that can set the id
-		MimeMessage msg = new MyMessage(session, mid);
+		MimeMessage msg = new MyMessage(session, additionalHeaders, content);
 
 		// the FULL content-type header, for example:
 		// Content-Type: text/plain; charset=windows-1252; format=flowed
