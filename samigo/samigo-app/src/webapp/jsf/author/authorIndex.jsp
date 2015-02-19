@@ -38,8 +38,6 @@
       <div class="portletBody">
 
 <script type="text/javascript" src="/samigo-app/js/info.js"></script>
-<script type="text/javascript" src="/library/js/jquery/tablesorter/2.0.3/jquery.tablesorter-2.0.3.min.js"></script>
-<link type="text/css" href="/samigo-app/css/tool_sam.css" rel="stylesheet" media="all"/>
 <script type="text/JavaScript">
 
 function clickPendingSelectActionLink(field){
@@ -125,44 +123,12 @@ $(document).ready(function() {
 		}
 	);
 	
-	
-	$.tablesorter.addParser({
-		id: 'dlt',
-		is: function (s){ return false },
-		format: function(value, table, cell){
-			return cell.innerHTML.split('<br>')[0];
-		},
-		type: 'text'
-		});
-	
 	$("#authorIndexForm\\:coreAssessments").tablesorter( {
-		sortList: [[1,0],[2,0]],
-		headers: { 
-            0: { 
-                sorter: false 
-            }, 
-            2: { 
-                sorter: 'dlt' 
-            }        
-		}
+		sortList: [[1,0]]
 	});
 	
 	$("#authorIndexForm\\:published-assessments").tablesorter( {
-		sortList: [[2,0], [1,0], [8,0]],
-		headers: { 
-            0: { 
-                sorter: false 
-            }, 
-            3: { 
-                sorter: false 
-            }, 
-            4: { 
-                sorter: false 
-            }, 
-            8: { 
-                sorter: 'dlt' 
-            }            
-		}
+		sortList: [[2,0], [1,0]]
 	}); 
 });
 </script>
@@ -201,10 +167,15 @@ $(document).ready(function() {
     	</div>
 
     	<div>
-			<h:selectOneRadio layout="pageDirection" value="#{author.assessCreationMode}" rendered="#{samLiteBean.visible}">
+			<h:selectOneRadio id="creationMode" layout="spread" value="#{author.assessCreationMode}" rendered="#{samLiteBean.visible}">
 		      <f:selectItem itemValue="1" itemLabel="#{authorFrontDoorMessages.assessmentBuild}" />
 		      <f:selectItem itemValue="2" itemLabel="#{authorFrontDoorMessages.markupText}" />
 		    </h:selectOneRadio>
+			<!-- SAM-2487 mark them up manually -->
+			<ul class="creation-mode-list no-list">
+			  <li><t:radio for="creationMode" index="0" /></li>
+			  <li><t:radio for="creationMode" index="1" /></li>
+			</ul>
     	</div>
 
   		<div>
@@ -228,9 +199,9 @@ $(document).ready(function() {
 
  <div id="samigo-create-import">
 	  <div>
-		<span class="new_assessment">
+		<h4>
       		<h:outputText value="#{authorFrontDoorMessages.assessment_import}" rendered="#{authorization.createAssessment}"/>
-		</span>
+		</h4>
     <h:commandButton id="import" value="#{authorFrontDoorMessages.button_import}" immediate="true" type="submit" 
       rendered="#{authorization.createAssessment}" action="importAssessment">
     </h:commandButton>
@@ -255,7 +226,7 @@ $(document).ready(function() {
  <!-- CORE ASSESSMENTS-->
  <h:outputText escape="false" rendered="#{authorization.createAssessment}" value="<div id=\"tabs-1\">"/>
   <t:dataTable cellpadding="0" cellspacing="0" rowClasses="list-row-even,list-row-odd" styleClass="tablesorter" id="coreAssessments" value="#{author.assessments}" var="coreAssessment" rendered="#{authorization.adminCoreAssessment}" summary="#{authorFrontDoorMessages.sum_coreAssessment}">
-    <t:column headerstyleClass="selectAction" styleClass="selectAction">
+    <t:column headerstyleClass="selectAction sorter-false" styleClass="selectAction">
       <f:facet name="header" >
 	   <h:outputText value="#{authorFrontDoorMessages.select_action}"/>
 	  </f:facet>
@@ -294,7 +265,12 @@ $(document).ready(function() {
         <h:outputText value="#{authorFrontDoorMessages.header_last_modified}"/>
 	  </f:facet>
   	  <h:outputText value="#{coreAssessment.lastModifiedBy}" />
-      <h:outputText escape="false" value="<br />"/>
+    </t:column>
+
+    <t:column headerstyleClass="lastModifiedDate" styleClass="lastModifiedDate">
+      <f:facet name="header">
+        <h:outputText value="#{authorFrontDoorMessages.header_last_modified_date}"/>
+	  </f:facet>
       <h:outputText value="#{coreAssessment.lastModifiedDateForDisplay}"/>      
     </t:column>
   </t:dataTable>
@@ -321,7 +297,7 @@ $(document).ready(function() {
 
   <t:dataTable id="published-assessments" rowClasses="list-row-even,list-row-odd" cellpadding="0" cellspacing="0" styleClass="tablesorter" rendered="#{authorization.adminPublishedAssessment}"
     value="#{author.publishedAssessments}" var="publishedAssessment" summary="#{authorFrontDoorMessages.sum_publishedAssessment}">
-    <t:column headerstyleClass="selectAction" styleClass="selectAction">
+    <t:column headerstyleClass="selectAction sorter-false" styleClass="selectAction">
 	  <f:facet name="header" >
 	   <h:outputText value="#{authorFrontDoorMessages.select_action}"/>
 	  </f:facet>
@@ -452,8 +428,8 @@ $(document).ready(function() {
         <h:outputText value="#{authorFrontDoorMessages.assessment_date} " />
       </f:facet>
       <h:outputText value="#{publishedAssessment.startDate}" >
-          <f:convertDateTime pattern="#{generalMessages.output_date_picker}"/>
-        </h:outputText>
+        <f:convertDateTime pattern="yyyy-MM-dd"/>
+      </h:outputText>
     </t:column>
    
 	<t:column headerstyleClass="dueDate" styleClass="dueDate">
@@ -461,7 +437,7 @@ $(document).ready(function() {
         <h:outputText value="#{authorFrontDoorMessages.assessment_due} " />
       </f:facet>
       <h:outputText value="#{publishedAssessment.dueDate}" >
-          <f:convertDateTime pattern="#{generalMessages.output_date_picker}"/>
+        <f:convertDateTime pattern="yyyy-MM-dd"/>
       </h:outputText>
     </t:column>
 
@@ -469,9 +445,13 @@ $(document).ready(function() {
       <f:facet name="header">
         <h:outputText value="#{authorFrontDoorMessages.header_last_modified}"/>
 	  </f:facet>
-
   	  <h:outputText value="#{publishedAssessment.lastModifiedBy}" />
-      <h:outputText escape="false" value="<br />"/>
+    </t:column>
+
+    <t:column headerstyleClass="lastModifiedDate" styleClass="lastModifiedDate">
+      <f:facet name="header">
+        <h:outputText value="#{authorFrontDoorMessages.header_last_modified_date}"/>
+	  </f:facet>
       <h:outputText value="#{publishedAssessment.lastModifiedDateForDisplay}"/>
     </t:column>
 

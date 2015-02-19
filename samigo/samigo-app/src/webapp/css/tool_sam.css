@@ -165,39 +165,11 @@ font-size:1.2em
 }
 
 .titlePending {
-	width: 67%;
+	width: 50%;
 }
 
 .titlePub {
-	width: 30%;
-}
-
-.lastModified {
-	width: 23%;
-}
-
-.releaseTo {
-	width: 11%;
-}
-
-.status {
-	width: 8%;
-}
-
-.inProgress {
-	width: 6%;
-}
-
-.submitted {
-	width: 6%;
-}
-
-.releaseDate {
-	width: 8%;
-}
-
-.dueDate {
-	width: 8%;
+	width: 28%;
 }
 
 .listAssessments th{
@@ -341,7 +313,7 @@ table.noBorder td {
 	width: 40%;
 	padding: 12px;
 }
-#samigo-create-new h4 {
+#samigo-create-container h4 {
 	margin: 0 0 8px;
 }
 #samigo-create-or {
@@ -1043,4 +1015,9 @@ td.releaseTo div.alertMessage {
     font-size: inherit !important;
     line-height: inherit !important;
     font-family: inherit !important;
+}
+
+ul.no-list {
+    list-style-type: none;
+    padding-left: 4px;
 }

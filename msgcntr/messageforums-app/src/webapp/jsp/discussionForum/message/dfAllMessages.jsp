@@ -266,7 +266,7 @@
 					<f:verbatim>
                         <a style="color:grey" class="display-topic-picker" id="msgForum:df_move_message_commandLink" onclick="resizeFrameForDialog();" href="#" >
 				    </f:verbatim>
-                    <h:outputText value="#{msgs.move_thread}" />
+                    <h:outputText rendered="#{ForumTool.selectedTopic.isMovePostings}" value="#{msgs.move_thread}" />
 					<f:verbatim></a></f:verbatim>
 					<f:verbatim></div></f:verbatim>
    		
@@ -441,6 +441,27 @@
 			</h:column> 
 		</mf:hierDataTable>
 </div>
+
+<f:verbatim><br/><br/></f:verbatim>
+<h:panelGrid columns="1" width="100%" styleClass="specialLink">
+	 <h:panelGroup styleClass="itemNav">
+	   <h:outputText   value="#{msgs.cdfm_previous_topic}"  rendered="#{!ForumTool.selectedTopic.hasPreviousTopic}" />
+		 <h:commandLink action="#{ForumTool.processActionDisplayPreviousTopic}" value="#{msgs.cdfm_previous_topic}"  rendered="#{ForumTool.selectedTopic.hasPreviousTopic}" 
+		                title=" #{msgs.cdfm_previous_topic}">
+			 <f:param value="#{ForumTool.selectedTopic.previousTopicId}" name="previousTopicId"/>
+			 <f:param value="#{ForumTool.selectedForum.forum.id}" name="forumId"/>
+		 </h:commandLink>
+		 <f:verbatim><h:outputText  id="blankSpace2" value=" |  " /></f:verbatim>				
+		 <h:outputText   value="#{msgs.cdfm_next_topic}" rendered="#{!ForumTool.selectedTopic.hasNextTopic}" />
+		 <h:commandLink action="#{ForumTool.processActionDisplayNextTopic}" value="#{msgs.cdfm_next_topic}" rendered="#{ForumTool.selectedTopic.hasNextTopic}" 
+		                title=" #{msgs.cdfm_next_topic}">
+			<f:param value="#{ForumTool.selectedTopic.nextTopicId}" name="nextTopicId"/>
+			<f:param value="#{ForumTool.selectedForum.forum.id}" name="forumId"/>
+		 </h:commandLink>
+	 </h:panelGroup>
+</h:panelGrid>
+
+
 		
 <input type="hidden" id="selectedTopicid" name="selectedTopicid" class="selectedTopicid" value="0" />
 <input type="hidden" id="moveReminder" name="moveReminder" class="moveReminder" value="false" />
